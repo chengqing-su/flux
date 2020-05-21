@@ -43,8 +43,20 @@ spec:
       - name: kubedir
         configMap:
           name: {{ template "flux.fullname" . }}-kube-config
+      {{- if .Values.ssh.key }}
+      - name: ssh-private
+        secret:
+          secretName: {{ include ".Values.ssh.key" . }}
+          defaultMode: 0400
+      {{- end }}
       {{- if .Values.ssh.known_hosts }}
-      - name: sshdir
+      - name: sshknownhosts
+        configMap:
+          name: {{ template "flux.fullname" . }}-ssh-known-hosts
+          defaultMode: 0600
+      {{- end }}
+      {{- if .Values.ssh.config }}
+      - name: sshconfig
         configMap:
           name: {{ template "flux.fullname" . }}-ssh-config
           defaultMode: 0600
@@ -127,9 +139,18 @@ spec:
           volumeMounts:
           - name: kubedir
             mountPath: /root/.kubectl
+          {{- if .Values.ssh.key }}
+          - name: ssh-private
+            mountPath: /root/.ssh/id_rsa
+          {{- end }}
           {{- if .Values.ssh.known_hosts }}
-          - name: sshdir
-            mountPath: /root/.ssh
+          - name: sshknownhosts
+            mountPath: /root/.ssh/known_hosts
+            readOnly: true
+          {{- end }}
+          {{- if .Values.ssh.config }}
+          - name: sshconfig
+            mountPath: /root/.ssh/config
             readOnly: true
           {{- end }}
           {{- if .Values.git.config.enabled }}

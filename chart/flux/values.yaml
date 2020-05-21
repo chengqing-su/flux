@@ -220,6 +220,7 @@ ssh:
   # will likely need to provide a host key for it in this field.
   known_hosts: ""
   # Specify options for SSH key generation.
+  key: ""
   keygen:
     # Specify a key format for key generation.
     # RFC4716” (RFC 4716/SSH2 public or private key),

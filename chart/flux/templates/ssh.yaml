@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "flux.fullname" . }}-ssh-config
+  name: {{ template "flux.fullname" . }}-ssh-known-hosts
 data:
   known_hosts: |
     {{- if .Values.ssh.known_hosts }}
